@@ -1,9 +1,9 @@
 # VibeProxy Claude Lane
 
-A verified, self-contained setup that gives **Hermes** (hermes-agent by Nous
-Research) Claude OAuth / subscription-route compatibility — with **visible extended thinking**
-and **safe tool calling** — through VibeProxy / CLIProxyAPI's local
-OpenAI-compatible gateway. It bundles a Hermes model-provider plugin, a
+A verified, self-contained compatibility lane for **Hermes** (hermes-agent by Nous
+Research) through a local VibeProxy / CLIProxyAPI OpenAI-compatible gateway. It focuses on
+request-shape correctness for Claude-family routes: visible extended thinking, safe tool
+calling, prompt caching, and provider-specific cleanup. It bundles a Hermes model-provider plugin, a
 transparent wire shim, a CLIProxyAPI config rule, and two small macOS
 LaunchAgents that keep the lane healthy across VibeProxy's nightly
 self-updates. Everything here is drop-in: clone this one directory and run the
@@ -21,7 +21,7 @@ rename shim  :8485   ── adds anthropic-beta header, folds system→user,
 CLIProxyAPI  :8318   ── openai→claude translation; payload rule injects
   │                     thinking.display=summarized (via merged-config.yaml)
   ▼
-claude.ai OAuth backend  (your Claude / Claude Code subscription)
+Claude-family upstream route
 ```
 
 The provider plugin does request-shape cleanup *before* the wire (identity
@@ -86,7 +86,7 @@ reasoning + tools, self-heals, and alerts on persistent failure.
 ## Requirements
 
 - **Either** the VibeProxy menu-bar app **or** a plain CLIProxyAPI install,
-  authenticated against a Claude / Claude Code OAuth subscription. The lane
+  authenticated against a Claude-family local gateway route. The lane
   assumes CLIProxyAPI listens on `127.0.0.1:8318` (adjust `SHIM_UPSTREAM` /
   `CANARY_UPSTREAM_URL` otherwise).
 - **hermes-agent** (Nous Research) for the provider plugin. Plain CLIProxyAPI
@@ -148,7 +148,7 @@ messages, and fixes the `mcp_` tool-name class.
 ### Bonus — Factory Droid BYOK (native Anthropic protocol)
 
 The shim also handles the native Anthropic Messages protocol, which makes it a
-drop-in Claude-subscription backend for [Factory Droid](https://factory.ai)'s
+drop-in Claude-family backend for [Factory Droid](https://factory.ai)'s
 BYOK custom models. Droid speaks `/v1/messages` directly (`provider:
 "anthropic"`), stamps its own `cache_control` markers (preserved end-to-end —
 prompt caching just works), and its reasoning-effort selector maps through the
