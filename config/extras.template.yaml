@@ -1,0 +1,72 @@
+# extras.template.yaml — user-owned CLIProxyAPI extras (chmod 600 the real copy).
+#
+# merge-config-extras.py deep-merges this into the VibeProxy-app-generated
+# merged-config.yaml (the app regenerates that file on every launch / Sparkle
+# auto-update, wiping manual edits — the merger re-injects these sections).
+#
+# Plain CLIProxyAPI users (no VibeProxy app): you do NOT need the merger or the
+# LaunchAgents. Just paste the `payload:` block below into your config.yaml once
+# and reload. That block is the REQUIRED half of the visible-thinking fix.
+#
+# SECURITY: never commit the REAL copy of this file if you add provider API
+# keys below — keep it out of git. This template ships redacted placeholders.
+
+# ── REQUIRED: visible Claude thinking ────────────────────────────────────────
+# Sets thinking.display=summarized post-translation so the claude.ai OAuth
+# backend returns thinking TEXT (not just a signature). Pairs with the
+# anthropic-beta header the 8485 shim injects — BOTH halves are required.
+payload:
+  override:
+  - models:
+    - name: claude-*
+      protocol: claude
+      match:
+      - thinking.type: adaptive
+    params:
+      thinking.display: summarized
+  # ── REQUIRED: prompt caching ──────────────────────────────────────────────
+  # CLIProxyAPI's openai→claude translator drops ALL client cache_control
+  # markers (message-level and content-part; verified on v7.2.53), so without
+  # this rule only the injected ~1.9k-token Claude Code prefix caches and
+  # large agent prompts re-bill fully on every turn. Stamping a breakpoint on
+  # the first content block of the first message caches the stable prefix
+  # (with the shim's system-folding, that block holds the agent's whole
+  # system/memory context — ~99% cache hit measured A/A). The match guard is
+  # REQUIRED: on native claude-protocol requests (Droid BYOK, SDKs) whose
+  # first message content is a plain string, an unguarded stamp corrupts the
+  # content into a type-less object and the backend 400s.
+  - models:
+    - name: claude-*
+      protocol: claude
+      match:
+      - messages.0.content.0.type: text
+    params:
+      messages.0.content.0.cache_control:
+        type: ephemeral
+
+# ── OPTIONAL: extra custom providers / models ────────────────────────────────
+# Everything below is optional. Uncomment and adapt if you want to expose extra
+# OpenAI-compatible providers through the same gateway. Remove entirely if you
+# only care about the Claude lane. Add real API keys only to your private,
+# git-ignored copy — never to this template.
+#
+# openai-compatibility:
+# - name: zai
+#   models:
+#   - name: glm-5.1
+#     alias: glm-5.1
+#     thinking:
+#       levels: [low, medium, high]
+#   - name: glm-5.2
+#     alias: glm-5.2
+#     thinking:
+#       levels: [low, medium, high]
+# - name: deepseek
+#   base-url: https://api.deepseek.com
+#   api-key-entries:
+#   - api-key: REDACTED-PUT-REAL-KEY-IN-YOUR-PRIVATE-EXTRAS-YAML
+#   models:
+#   - name: deepseek-v4-pro
+#     alias: deepseek-v4-pro
+#   - name: deepseek-v4-flash
+#     alias: deepseek-v4-flash

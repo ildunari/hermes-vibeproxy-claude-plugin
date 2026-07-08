@@ -1,0 +1,4 @@
+name: vibeproxy
+kind: model-provider
+version: 1.1.0
+description: Local VibeProxy OpenAI-compatible gateway with Claude compatibility sanitizers (OAuth cloak, mcp__ tool rename, reasoning-effort suffix, sampling-param stripping)

@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+*.log
+.cli-proxy-api/
+extras.yaml
+merged-config.yaml

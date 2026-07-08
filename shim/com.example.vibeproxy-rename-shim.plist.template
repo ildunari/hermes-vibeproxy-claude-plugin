@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template. install.sh substitutes __HOME__ and __PYTHON__.
+  __PYTHON__ needs aiohttp available (the shim's only third-party dependency).
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.example.vibeproxy-rename-shim</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__PYTHON__</string>
+        <string>__HOME__/.local/share/vibeproxy-claude-lane/shim/shim.py</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>SHIM_PORT</key>
+        <string>8485</string>
+        <key>SHIM_UPSTREAM</key>
+        <string>http://127.0.0.1:8318</string>
+        <key>SHIM_LOG</key>
+        <string>__HOME__/.local/state/vibeproxy-claude-lane/vibeproxy-rename-shim.log</string>
+        <key>SHIM_DEBUG</key>
+        <string>0</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+    <key>StandardOutPath</key>
+    <string>__HOME__/.local/state/vibeproxy-claude-lane/vibeproxy-rename-shim.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__HOME__/.local/state/vibeproxy-claude-lane/vibeproxy-rename-shim.err.log</string>
+</dict>
+</plist>

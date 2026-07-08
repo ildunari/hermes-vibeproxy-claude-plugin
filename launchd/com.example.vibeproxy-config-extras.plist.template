@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Template. install.sh substitutes __HOME__ and __PYTHON__.
+  __PYTHON__ must have PyYAML (the merger imports yaml). install.sh verifies.
+  WatchPaths fires the merger whenever the VibeProxy app rewrites merged-config.yaml.
+-->
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.example.vibeproxy-config-extras</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>__PYTHON__</string>
+		<string>__HOME__/.local/share/vibeproxy-claude-lane/scripts/merge-config-extras.py</string>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>VIBEPROXY_MERGED_CONFIG</key>
+		<string>__HOME__/.cli-proxy-api/merged-config.yaml</string>
+		<key>VIBEPROXY_EXTRAS</key>
+		<string>__HOME__/.cli-proxy-api/extras.yaml</string>
+		<key>VIBEPROXY_EXTRAS_LOG</key>
+		<string>__HOME__/.local/state/vibeproxy-claude-lane/config-extras.log</string>
+	</dict>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>WatchPaths</key>
+	<array>
+		<string>__HOME__/.cli-proxy-api/merged-config.yaml</string>
+	</array>
+	<key>ThrottleInterval</key>
+	<integer>5</integer>
+	<key>StandardOutPath</key>
+	<string>__HOME__/.local/state/vibeproxy-claude-lane/config-extras.launchd.log</string>
+	<key>StandardErrorPath</key>
+	<string>__HOME__/.local/state/vibeproxy-claude-lane/config-extras.launchd.log</string>
+</dict>
+</plist>
